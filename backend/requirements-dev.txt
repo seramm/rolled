@@ -1,0 +1,6 @@
+ruff
+mypy
+django-stubs[compatible-mypy]
+pytest
+pytest-django
+pytest-cov
