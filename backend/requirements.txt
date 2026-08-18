@@ -1,3 +1,5 @@
 django
 django-ninja
 psycopg[binary]
+whitenoise
+gunicorn
