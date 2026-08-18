@@ -52,15 +52,18 @@ jobs:
       SECRET_KEY: ci-dummy-secret-not-used-in-prod
       DEBUG: "0"
       ALLOWED_HOSTS: "*"
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+      POSTGRES_DB: rolled
+      POSTGRES_USER: rolled
+      POSTGRES_PASSWORD: rolled
+      POSTGRES_HOST: localhost
 
     services:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test_db
+          POSTGRES_USER: rolled
+          POSTGRES_PASSWORD: rolled
+          POSTGRES_DB: rolled
         ports:
           - 5432:5432
         options: >-
