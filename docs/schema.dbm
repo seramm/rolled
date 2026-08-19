@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="2.0.0-beta" use-changelog="false" max-obj-count="6"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="0,158" last-zoom="1"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<table name="film_stock" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1060" y="280"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="brand" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="iso" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="format" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="color_type" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="frames" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="film_stock_pk" type="pk-constr" table="public.film_stock">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="camera" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="760" y="300"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<constraint name="camera_pk" type="pk-constr" table="public.camera">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="roll" layers="0" collapse-mode="2" max-obj-count="16" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="640" y="580"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="frames_shot" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="expiration_date" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_bought">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_started">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_loaded">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_finished">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_developed">
+		<type name="date" length="0"/>
+	</column>
+	<column name="date_scanned">
+		<type name="date" length="0"/>
+	</column>
+	<column name="notes">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="roll_pk" type="pk-constr" table="public.roll">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="id_camera" index="13"/>
+		<object name="id_film_stock" index="12"/>
+		<object name="id_user" index="11"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="camera_fk" index="3"/>
+		<object name="film_stock_fk" index="2"/>
+		<object name="user_fk" index="1"/>
+	</customidxs></table>
+
+<table name="user" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="540" y="60"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<constraint name="user_pk" type="pk-constr" table="public.&quot;user&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="user_has_many_roll" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#bd0078"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.roll"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-55.0375" y="25.047"/>
+	</label>
+</relationship>
+
+<relationship name="film_stock_has_many_roll" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#fc877b"
+	 src-table="public.film_stock"
+	 dst-table="public.roll"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="82.3741" y="-26.4054"/>
+	</label>
+</relationship>
+
+<table name="camera_model" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="840" y="40"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="make" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="model" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="format" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<constraint name="camera_model_pk" type="pk-constr" table="public.camera_model">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="camera_model_has_many_camera" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#659af9"
+	 src-table="public.camera_model"
+	 dst-table="public.camera"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="75.0386" y="-27.553"/>
+	</label>
+</relationship>
+
+<relationship name="user_has_many_camera" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#da1b37"
+	 src-table="public.&quot;user&quot;"
+	 dst-table="public.camera"
+	 src-required="true" dst-required="false">
+	<label ref-type="name-label">
+		<position x="22.1331" y="-24.953"/>
+	</label>
+</relationship>
+
+<relationship name="camera_has_many_roll" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#5c4fac"
+	 src-table="public.camera"
+	 dst-table="public.roll"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+</dbmodel>
