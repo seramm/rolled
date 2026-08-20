@@ -44,12 +44,12 @@ ignore = [
 "**/settings/*.py" = ["F403", "F405", "E402", "S105"]
 "**/tests/**" = ["S101", "ARG001", "ARG002", "PLR2004"]
 "**/test_*.py" = ["S101", "ARG001", "ARG002"]
+"**/routers/*.py" = ["ARG001"]
 "manage.py" = ["T20"]
 "conftest.py" = ["ARG001"]
-"routers.py" = ["ARG001"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["config", "apps"]
+known-first-party = ["config", "api"]
 section-order = ["future", "standard-library", "third-party", "django", "first-party", "local-folder"]
 
 [tool.ruff.lint.isort.sections]
