@@ -30,6 +30,8 @@ DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = [h for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h]
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+
 AUTH_USER_MODEL = "api.User"
 
 # Application definition

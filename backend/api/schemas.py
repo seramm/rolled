@@ -3,7 +3,7 @@ from datetime import date
 
 from ninja import ModelSchema, Schema
 
-from .models import Camera, CameraModel, FilmStock, Roll
+from .models import Camera, CameraModel, FilmStock, Roll, User
 
 
 class CameraModelOut(ModelSchema):
@@ -77,3 +77,13 @@ class RollIn(Schema):
     date_developed: date | None = None
     date_scanned: date | None = None
     notes: str = ""
+
+
+class UserOut(ModelSchema):
+    class Meta:
+        model = User
+        fields = ["id", "username"]
+
+
+class ErrorOut(Schema):
+    detail: str

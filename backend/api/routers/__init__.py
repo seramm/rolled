@@ -1,6 +1,7 @@
 from ninja import NinjaAPI, Schema
 from ninja.security import django_auth
 
+from .auth import router as auth_router
 from .camera_models import router as camera_models_router
 from .cameras import router as cameras_router
 from .film_stocks import router as film_stocks_router
@@ -18,6 +19,7 @@ def health(request):
     return {"status": "ok"}
 
 
+api.add_router("/auth", auth_router)
 api.add_router("/camera-models", camera_models_router)
 api.add_router("/cameras", cameras_router)
 api.add_router("/film-stocks", film_stocks_router)

@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "generate-api": "openapi-typescript http://localhost:8000/api/openapi.json -o src/api/schema.d.ts"
   },
   "dependencies": {
     "@mantine/core": "^9.5.1",
