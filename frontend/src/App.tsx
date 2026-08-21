@@ -1,9 +1,19 @@
-import { Button, Center, Loader, Stack, Text } from '@mantine/core';
+import { useState } from 'react';
+import { Button, Center, Container, Group, Loader, Text, Title } from '@mantine/core';
+import { RollList } from './components/RollList';
+import { CreateRollForm } from './components/CreateRollForm';
 import { useAuth } from './hooks/useAuth';
+import { useRolls } from './hooks/useRolls';
 import { LoginForm } from './components/LoginForm';
+import { useFilmStocks } from './hooks/useFilmStocks';
+import { useCameras } from './hooks/useCameras';
 
 function App() {
   const { user, loading, login, logout } = useAuth();
+  const { rolls, loading: rollsLoading, createRoll } = useRolls();
+  const { filmStocks } = useFilmStocks();
+  const { cameras } = useCameras();
+  const [modalOpened, setModalOpened] = useState(false);
 
   if (loading) {
     return (
@@ -17,12 +27,32 @@ function App() {
   }
 
   return (
-    <Center h="100vh">
-      <Stack align="center">
-        <Text>Hello, {user.username}</Text>
-        <Button onClick={logout}>Logout</Button>
-      </Stack>
-    </Center>
+    <Container size="sm" py="xl">
+      <Group justify="space-between" mb="lg">
+        <Title order={2}>rolled</Title>
+        <Group>
+          <Text size="sm">{user.username}</Text>
+          <Button variant="subtle" onClick={logout}>
+            Cerrar sesión
+          </Button>
+        </Group>
+      </Group>
+
+      <Group justify="space-between" mb="md">
+        <Title order={4}>Mis carretes</Title>
+        <Button onClick={() => setModalOpened(true)}>Nuevo carrete</Button>
+      </Group>
+
+      {rollsLoading ? <Loader /> : <RollList rolls={rolls} />}
+
+      <CreateRollForm
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        filmStocks={filmStocks}
+        cameras={cameras}
+        onSubmit={createRoll}
+      />
+    </Container>
   );
 }
 
