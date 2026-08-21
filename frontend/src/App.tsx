@@ -10,7 +10,7 @@ import { useCameras } from './hooks/useCameras';
 
 function App() {
   const { user, loading, login, logout } = useAuth();
-  const { rolls, loading: rollsLoading, createRoll } = useRolls();
+  const { rolls, loading: rollsLoading, createRoll, updateRoll } = useRolls();
   const { filmStocks } = useFilmStocks();
   const { cameras } = useCameras();
   const [modalOpened, setModalOpened] = useState(false);
@@ -43,7 +43,7 @@ function App() {
         <Button onClick={() => setModalOpened(true)}>New roll</Button>
       </Group>
 
-      {rollsLoading ? <Loader /> : <RollList rolls={rolls} />}
+      {rollsLoading ? <Loader /> : <RollList rolls={rolls} onUpdate={updateRoll} />}
 
       <CreateRollForm
         opened={modalOpened}

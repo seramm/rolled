@@ -46,6 +46,7 @@ class RollOut(ModelSchema):
     film_stock: FilmStockOut
     camera: CameraOut | None
     is_in_progress: bool
+    status: Roll.Status
 
     class Meta:
         model = Roll

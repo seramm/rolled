@@ -29,5 +29,31 @@ export function useRolls() {
     setRolls((prev) => [...prev, data]);
   }, []);
 
-  return { rolls, loading, createRoll, refetch };
+  const updateRoll = useCallback(async (roll: Roll, changes: Partial<RollIn>) => {
+    const payload: RollIn = {
+      film_stock_id: roll.film_stock.id,
+      camera_id: roll.camera?.id ?? null,
+      status: roll.status,
+      frames_shot: roll.frames_shot,
+      expiration_date: roll.expiration_date,
+      date_bought: roll.date_bought,
+      date_started: roll.date_started,
+      date_loaded: roll.date_loaded,
+      date_finished: roll.date_finished,
+      date_developed: roll.date_developed,
+      date_scanned: roll.date_scanned,
+      notes: roll.notes,
+      ...changes,
+    };
+    const { data, error } = await client.PUT('/api/rolls/{roll_id}', {
+      params: { path: { roll_id: roll.id } },
+      body: payload,
+    });
+    if (error || !data) {
+      throw new Error('The roll could not be updated ');
+    }
+    setRolls((prev) => prev.map((r) => (r.id === data.id ? data : r)));
+  }, []);
+
+  return { rolls, loading, createRoll, updateRoll, refetch };
 }

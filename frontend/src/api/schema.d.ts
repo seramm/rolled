@@ -323,13 +323,9 @@ export interface components {
             camera: components["schemas"]["CameraOut"] | null;
             /** Is In Progress */
             is_in_progress: boolean;
+            status: components["schemas"]["Status"];
             /** Id */
             id?: string | null;
-            /**
-             * Status
-             * @default stored
-             */
-            status: string;
             /**
              * Frames Shot
              * @default 0
@@ -355,6 +351,11 @@ export interface components {
             /** Notes */
             notes?: string | null;
         };
+        /**
+         * Status
+         * @enum {string}
+         */
+        Status: "stored" | "loaded" | "started" | "finished" | "developed" | "scanned";
         /** RollIn */
         RollIn: {
             /**
@@ -394,11 +395,6 @@ export interface components {
              */
             notes: string;
         };
-        /**
-         * Status
-         * @enum {string}
-         */
-        Status: "stored" | "loaded" | "started" | "finished" | "developed" | "scanned";
     };
     responses: never;
     parameters: never;
