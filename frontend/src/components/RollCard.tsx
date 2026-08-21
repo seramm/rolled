@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Card, Group, NumberInput, Select, Text } from '@mantine/core';
+import { Badge, Button, Card, Group, Modal, NumberInput, Select, Text } from '@mantine/core';
 import type { components } from '../api/schema';
 
 type Roll = components['schemas']['RollOut'];
@@ -26,6 +26,7 @@ const statusOptions = [
 interface RollCardProps {
   roll: Roll;
   onUpdate: (roll: Roll, changes: Partial<RollIn>) => Promise<void>;
+  onDelete: (rollId: string) => Promise<void>;
 }
 
 function getStops(shotIso: number | null | undefined, boxIso: number): number | null {
@@ -125,9 +126,15 @@ function FramesBar({ shotFrames, filmStockFrames }: { shotFrames: number; filmSt
   );
 }
 
-export function RollCard({ roll, onUpdate }: RollCardProps) {
+export function RollCard({ roll, onUpdate, onDelete }: RollCardProps) {
   const [framesShot, setFramesShot] = useState(roll.frames_shot);
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const stops = getStops(roll.shot_iso, roll.film_stock.iso);
+
+  const handleDelete = async () => {
+    await onDelete(roll.id);
+    setDeleteModalOpened(false);
+  };
 
   return (
     <Card withBorder padding="md">
@@ -151,26 +158,44 @@ export function RollCard({ roll, onUpdate }: RollCardProps) {
         {roll.shot_iso && roll.shot_iso !== roll.film_stock.iso ? ` · shot at ISO ${roll.shot_iso}` : ''}
         {roll.camera ? ` · ${roll.camera.camera_model.make} ${roll.camera.camera_model.model}` : ''}
       </Text>
-      <Group align="flex-end">
-        <Select
-          label="Status"
-          data={statusOptions}
-          value={roll.status}
-          onChange={(value) => value && onUpdate(roll, { status: value as RollIn['status'] })}
-          size="xs"
-          w={140}
-        />
-        <NumberInput
-          label="Frames shot"
-          min={0}
-          max={roll.film_stock.frames}
-          value={framesShot}
-          onChange={(value) => setFramesShot(Number(value))}
-          onBlur={() => onUpdate(roll, { frames_shot: framesShot })}
-          size="xs"
-          w={140}
-        />
+      <Group align="flex-end" justify="space-between">
+        <Group align="flex-end">
+          <Select
+            label="Status"
+            data={statusOptions}
+            value={roll.status}
+            onChange={(value) => value && onUpdate(roll, { status: value as RollIn['status'] })}
+            size="xs"
+            w={140}
+          />
+          <NumberInput
+            label="Frames shot"
+            min={0}
+            max={roll.film_stock.frames}
+            value={framesShot}
+            onChange={(value) => setFramesShot(Number(value))}
+            onBlur={() => onUpdate(roll, { frames_shot: framesShot })}
+            size="xs"
+            w={140}
+          />
+        </Group>
+        <Button color="red" variant="subtle" size="xs" onClick={() => setDeleteModalOpened(true)}>
+          Delete
+        </Button>
       </Group>
+      <Modal opened={deleteModalOpened} onClose={() => setDeleteModalOpened(false)} title="Delete roll">
+        <Text mb="md">
+          Delete {roll.film_stock.brand} {roll.film_stock.name}? This cannot be undone.
+        </Text>
+        <Group justify="flex-end">
+          <Button variant="default" onClick={() => setDeleteModalOpened(false)}>
+            Cancel
+          </Button>
+          <Button color="red" onClick={handleDelete}>
+            Delete
+          </Button>
+        </Group>
+      </Modal>
     </Card>
   );
 }

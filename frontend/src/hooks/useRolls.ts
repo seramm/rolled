@@ -56,5 +56,15 @@ export function useRolls() {
     setRolls((prev) => prev.map((r) => (r.id === data.id ? data : r)));
   }, []);
 
-  return { rolls, loading, createRoll, updateRoll, refetch };
+  const deleteRoll = useCallback(async (rollId: string) => {
+    const { error } = await client.DELETE('/api/rolls/{roll_id}', {
+      params: { path: { roll_id: rollId } },
+    });
+    if (error) {
+      throw new Error('The roll could not be deleted');
+    }
+    setRolls((prev) => prev.filter((r) => r.id !== rollId));
+  }, []);
+
+  return { rolls, loading, createRoll, updateRoll, deleteRoll, refetch };
 }

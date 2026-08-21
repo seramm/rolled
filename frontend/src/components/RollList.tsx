@@ -8,9 +8,10 @@ type RollIn = components['schemas']['RollIn'];
 interface RollListProps {
   rolls: Roll[];
   onUpdate: (roll: Roll, changes: Partial<RollIn>) => Promise<void>;
+  onDelete: (rollId: string) => Promise<void>;
 }
 
-export function RollList({ rolls, onUpdate }: RollListProps) {
+export function RollList({ rolls, onUpdate, onDelete }: RollListProps) {
   if (rolls.length === 0) {
     return <Text c="dimmed">No rolls so far.</Text>;
   }
@@ -18,7 +19,7 @@ export function RollList({ rolls, onUpdate }: RollListProps) {
   return (
     <Stack>
       {rolls.map((roll) => (
-        <RollCard key={roll.id} roll={roll} onUpdate={onUpdate} />
+        <RollCard key={roll.id} roll={roll} onUpdate={onUpdate} onDelete={onDelete} />
       ))}
     </Stack>
   );
