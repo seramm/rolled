@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Badge, Card, Group, NumberInput, Progress, Select, Text } from '@mantine/core';
+import { Badge, Card, Group, NumberInput, Select, Text } from '@mantine/core';
 import type { components } from '../api/schema';
 
 type Roll = components['schemas']['RollOut'];
@@ -54,6 +54,77 @@ function PushPullBar({ stops }: { stops: number }) {
   return <Group gap={2}>{segments}</Group>;
 }
 
+function Sprockets() {
+  const holes = Array.from({ length: 60 });
+  return (
+    <Group gap={4} justify="space-between" px={4}>
+      {holes.map((_, i) => (
+        <div key={i} style={{ width: 2, height: 4, borderRadius: 1, backgroundColor: 'var(--mantine-color-gray-5)' }} />
+      ))}
+    </Group>
+  );
+}
+
+function FramesBar({ shotFrames, filmStockFrames }: { shotFrames: number; filmStockFrames: number }) {
+  const segments = [];
+  for (let i = 0; i < filmStockFrames; i++) {
+    const shot = i < shotFrames;
+    segments.push(
+      <div
+        key={i}
+        style={{
+          flex: 1,
+          aspectRatio: '3/2',
+          backgroundColor: shot ? 'var(--mantine-color-blue-6)' : 'var(--mantine-color-dark-3)',
+          border: '1px solid var(--mantine-color-dark-3)',
+        }}
+      />,
+    );
+  }
+
+  return (
+    <Group gap={0} my={2} wrap="nowrap" align="center">
+      <div
+        style={{
+          position: 'relative',
+          flex: 1,
+          marginLeft: 15,
+          backgroundColor: 'var(--mantine-color-dark-8)',
+          padding: '2px 8px',
+          borderRadius: 4,
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            left: -15,
+            top: -5,
+            bottom: -5,
+            width: 22,
+            backgroundColor: 'var(--mantine-color-dark-6)',
+            border: '1px solid var(--mantine-color-gray-5)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: -7,
+            top: -10,
+            width: 6,
+            height: 6,
+            backgroundColor: 'var(--mantine-color-gray-5)',
+          }}
+        />
+        <Sprockets />
+        <Group gap={1} my={2}>
+          {segments}
+        </Group>
+        <Sprockets />
+      </div>
+    </Group>
+  );
+}
+
 export function RollCard({ roll, onUpdate }: RollCardProps) {
   const [framesShot, setFramesShot] = useState(roll.frames_shot);
   const stops = getStops(roll.shot_iso, roll.film_stock.iso);
@@ -71,12 +142,12 @@ export function RollCard({ roll, onUpdate }: RollCardProps) {
           <Badge color={statusColors[roll.status] ?? 'gray'}>{roll.status}</Badge>
         </Group>
       </Group>
-      <div style={{ marginBottom: 8 }}>
+      <div style={{ marginBottom: 15 }}>
         <PushPullBar stops={stops} />
       </div>
-      <Progress value={(roll.frames_shot / roll.film_stock.frames) * 100} size="lg" mb="xs" />
-      <Text size="sm" c="dimmed" mb="sm">
-        {roll.frames_shot} / {roll.film_stock.frames} frames
+      <FramesBar shotFrames={roll.frames_shot} filmStockFrames={roll.film_stock.frames} />
+      <Text size="sm" c="dimmed" mt="xs" mb="sm">
+        {roll.frames_shot} / {roll.film_stock.frames} frames · {roll.film_stock.color_type}
         {roll.shot_iso && roll.shot_iso !== roll.film_stock.iso ? ` · shot at ISO ${roll.shot_iso}` : ''}
         {roll.camera ? ` · ${roll.camera.camera_model.make} ${roll.camera.camera_model.model}` : ''}
       </Text>
