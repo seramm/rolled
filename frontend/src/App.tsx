@@ -27,7 +27,7 @@ function App() {
   }
 
   return (
-    <Container size="sm" py="xl">
+    <Container size="md" py="xl">
       <Group justify="space-between" mb="lg">
         <Title order={2}>rolled</Title>
         <Group>
