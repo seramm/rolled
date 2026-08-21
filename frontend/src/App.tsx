@@ -33,14 +33,14 @@ function App() {
         <Group>
           <Text size="sm">{user.username}</Text>
           <Button variant="subtle" onClick={logout}>
-            Cerrar sesión
+            Logout
           </Button>
         </Group>
       </Group>
 
       <Group justify="space-between" mb="md">
-        <Title order={4}>Mis carretes</Title>
-        <Button onClick={() => setModalOpened(true)}>Nuevo carrete</Button>
+        <Title order={4}>My rolls</Title>
+        <Button onClick={() => setModalOpened(true)}>New roll</Button>
       </Group>
 
       {rollsLoading ? <Loader /> : <RollList rolls={rolls} />}
