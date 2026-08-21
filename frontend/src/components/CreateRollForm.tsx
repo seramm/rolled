@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { components } from '../api/schema';
 import { useForm } from '@mantine/form';
-import { Button, Modal, Select, Stack, Text, TextInput } from '@mantine/core';
+import { Button, Modal, NumberInput, Select, Stack, Text, TextInput } from '@mantine/core';
 
 type FilmStock = components['schemas']['FilmStockOut'];
 type Camera = components['schemas']['CameraOut'];
@@ -18,7 +18,11 @@ interface CreateRollFormProps {
 export function CreateRollForm({ opened, onClose, filmStocks, cameras, onSubmit }: CreateRollFormProps) {
   const [error, setError] = useState<string | null>(null);
   const form = useForm({
-    initialValues: { film_stock_id: '', camera_id: '', expiration_date: '', notes: '' },
+    initialValues: { film_stock_id: '', camera_id: '', expiration_date: '', shot_iso: '', notes: '' },
+    validate: {
+      film_stock_id: (value) => (value ? null : 'Select a film stock'),
+      expiration_date: (value) => (value ? null : 'Set an expiration date'),
+    },
   });
   const handleSubmit = form.onSubmit(async (values) => {
     setError(null);
@@ -28,6 +32,7 @@ export function CreateRollForm({ opened, onClose, filmStocks, cameras, onSubmit 
         camera_id: values.camera_id || null,
         status: 'stored',
         frames_shot: 0,
+        shot_iso: values.shot_iso ? Number(values.shot_iso) : null,
         expiration_date: values.expiration_date,
         notes: values.notes,
       });
@@ -54,6 +59,7 @@ export function CreateRollForm({ opened, onClose, filmStocks, cameras, onSubmit 
             {...form.getInputProps('camera_id')}
           />
           <TextInput label="Expiration date" type="date" required {...form.getInputProps('expiration_date')} />
+          <NumberInput label="Shot ISO (optional)" {...form.getInputProps('shot_iso')} />
           <TextInput label="Notes" {...form.getInputProps('notes')} />
           {error && (
             <Text c="red" size="sm">

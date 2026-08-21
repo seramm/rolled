@@ -331,6 +331,8 @@ export interface components {
              * @default 0
              */
             frames_shot: number;
+            /** Shot Iso */
+            shot_iso?: number | null;
             /**
              * Expiration Date
              * Format: date
@@ -372,6 +374,8 @@ export interface components {
              * @default 0
              */
             frames_shot: number;
+            /** Shot Iso */
+            shot_iso?: number | null;
             /**
              * Expiration Date
              * Format: date

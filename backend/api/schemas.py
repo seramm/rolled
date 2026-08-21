@@ -54,6 +54,7 @@ class RollOut(ModelSchema):
             "id",
             "status",
             "frames_shot",
+            "shot_iso",
             "expiration_date",
             "date_bought",
             "date_started",
@@ -70,6 +71,7 @@ class RollIn(Schema):
     camera_id: uuid.UUID | None = None
     status: Roll.Status = Roll.Status.STORED
     frames_shot: int = 0
+    shot_iso: int | None = None
     expiration_date: date
     date_bought: date | None = None
     date_started: date | None = None

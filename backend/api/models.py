@@ -60,6 +60,7 @@ class Roll(models.Model):
     )
     status = models.CharField(max_length=255, choices=Status.choices, default=Status.STORED)
     frames_shot = models.PositiveSmallIntegerField(default=0)
+    shot_iso = models.PositiveSmallIntegerField(null=True, blank=True)
     expiration_date = models.DateField()
     date_bought = models.DateField(null=True, blank=True)
     date_started = models.DateField(null=True, blank=True)

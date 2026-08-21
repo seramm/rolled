@@ -28,8 +28,35 @@ interface RollCardProps {
   onUpdate: (roll: Roll, changes: Partial<RollIn>) => Promise<void>;
 }
 
+function getStops(shotIso: number | null | undefined, boxIso: number): number | null {
+  if (!shotIso || shotIso === boxIso) return 0;
+  return Math.round(Math.log2(shotIso / boxIso) * 2) / 2;
+}
+function formatPushPull(stops: number): string {
+  if (stops === 0) return 'Box speed';
+  return `${stops > 0 ? '+' : ''}${stops} stop${Math.abs(stops) === 1 ? '' : 's'}`;
+}
+
+function PushPullBar({ stops }: { stops: number }) {
+  const rounded = Math.round(stops);
+  const range = Math.max(3, Math.abs(rounded));
+  const segments = [];
+  for (let i = -range; i <= range; i++) {
+    if (i === 0) continue;
+    let color = 'var(--mantine-color-gray-2)';
+    if (rounded > 0 && i > 0 && i <= rounded) {
+      color = 'var(--mantine-color-red-6)';
+    } else if (rounded < 0 && i < 0 && i >= rounded) {
+      color = 'var(--mantine-color-blue-6)';
+    }
+    segments.push(<div key={i} style={{ flex: 1, height: 6, borderRadius: 2, backgroundColor: color }} />);
+  }
+  return <Group gap={2}>{segments}</Group>;
+}
+
 export function RollCard({ roll, onUpdate }: RollCardProps) {
   const [framesShot, setFramesShot] = useState(roll.frames_shot);
+  const stops = getStops(roll.shot_iso, roll.film_stock.iso);
 
   return (
     <Card withBorder padding="md">
@@ -37,11 +64,20 @@ export function RollCard({ roll, onUpdate }: RollCardProps) {
         <Text fw={500}>
           {roll.film_stock.brand} {roll.film_stock.name}
         </Text>
-        <Badge color={statusColors[roll.status] ?? 'gray'}>{roll.status}</Badge>
+        <Group gap="xs">
+          <Badge color={stops === 0 ? 'gray' : stops > 0 ? 'red' : 'blue'} variant="light">
+            {formatPushPull(stops)}
+          </Badge>
+          <Badge color={statusColors[roll.status] ?? 'gray'}>{roll.status}</Badge>
+        </Group>
       </Group>
-      <Progress value={(roll.frames_shot / roll.film_stock.frames) * 100} mb="xs" />
+      <div style={{ marginBottom: 8 }}>
+        <PushPullBar stops={stops} />
+      </div>
+      <Progress value={(roll.frames_shot / roll.film_stock.frames) * 100} size="lg" mb="xs" />
       <Text size="sm" c="dimmed" mb="sm">
         {roll.frames_shot} / {roll.film_stock.frames} frames
+        {roll.shot_iso && roll.shot_iso !== roll.film_stock.iso ? ` · shot at ISO ${roll.shot_iso}` : ''}
         {roll.camera ? ` · ${roll.camera.camera_model.make} ${roll.camera.camera_model.model}` : ''}
       </Text>
       <Group align="flex-end">

@@ -35,6 +35,7 @@ export function useRolls() {
       camera_id: roll.camera?.id ?? null,
       status: roll.status,
       frames_shot: roll.frames_shot,
+      shot_iso: roll.shot_iso,
       expiration_date: roll.expiration_date,
       date_bought: roll.date_bought,
       date_started: roll.date_started,
