@@ -56,11 +56,11 @@ function PushPullBar({ stops }: { stops: number }) {
 }
 
 function Sprockets() {
-  const holes = Array.from({ length: 60 });
+  const holes = Array.from({ length: 100 });
   return (
     <Group gap={4} justify="space-between" px={4}>
       {holes.map((_, i) => (
-        <div key={i} style={{ width: 2, height: 4, borderRadius: 1, backgroundColor: 'var(--mantine-color-gray-5)' }} />
+        <div key={i} style={{ width: 2, height: 3, borderRadius: 1, backgroundColor: 'var(--mantine-color-gray-5)' }} />
       ))}
     </Group>
   );
