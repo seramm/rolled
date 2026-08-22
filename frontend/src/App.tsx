@@ -8,14 +8,12 @@ import { LoginForm } from './components/LoginForm';
 import { useFilmStocks } from './hooks/useFilmStocks';
 import { useCameras } from './hooks/useCameras';
 import { GearPage } from './pages/GearPage';
+import type { components } from './api/schema';
+
+type User = components['schemas']['UserOut'];
 
 function App() {
   const { user, loading, login, logout } = useAuth();
-  const { rolls, loading: rollsLoading, createRoll, updateRoll, deleteRoll } = useRolls();
-  const { filmStocks } = useFilmStocks();
-  const { cameras } = useCameras();
-  const [modalOpened, setModalOpened] = useState(false);
-  const [view, setView] = useState<'rolls' | 'gear'>('rolls');
 
   if (loading) {
     return (
@@ -27,6 +25,15 @@ function App() {
   if (!user) {
     return <LoginForm onSubmit={login} />;
   }
+  return <MainApp user={user} onLogout={logout} />;
+}
+
+function MainApp({ user, onLogout }: { user: User; onLogout: () => void }) {
+  const { rolls, loading: rollsLoading, createRoll, updateRoll, deleteRoll } = useRolls();
+  const { filmStocks } = useFilmStocks();
+  const { cameras } = useCameras();
+  const [modalOpened, setModalOpened] = useState(false);
+  const [view, setView] = useState<'rolls' | 'gear'>('rolls');
 
   return (
     <Container size="md" py="xl">
@@ -40,7 +47,7 @@ function App() {
             Gear
           </Button>
           <Text size="sm">{user.username}</Text>
-          <Button variant="subtle" onClick={logout}>
+          <Button variant="subtle" onClick={onLogout}>
             Logout
           </Button>
         </Group>
