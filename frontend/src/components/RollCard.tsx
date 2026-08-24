@@ -5,6 +5,8 @@ import type { components } from '../api/schema';
 type Roll = components['schemas']['RollOut'];
 type RollIn = components['schemas']['RollIn'];
 
+const EXPIRATION_WARNING_DAYS = 90;
+
 const statusColors: Record<string, string> = {
   stored: 'gray',
   loaded: 'blue',
@@ -29,6 +31,17 @@ interface RollCardProps {
   onDelete: (rollId: string) => Promise<void>;
 }
 
+function getTimeToExpire(expirationDate: string) {
+  // TODO: prase expirationDate to avoid UTC-vs-local offset
+  const daysToExpire = (new Date(expirationDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+
+  if (daysToExpire <= 0) {
+    return { label: `Expired on ${expirationDate}`, color: 'red' };
+  } else if (daysToExpire < EXPIRATION_WARNING_DAYS) {
+    return { label: `To expire on ${expirationDate}`, color: 'yellow' };
+  }
+  return null;
+}
 function getStops(shotIso: number | null | undefined, boxIso: number): number | null {
   if (!shotIso || shotIso === boxIso) return 0;
   return Math.round(Math.log2(shotIso / boxIso) * 2) / 2;
@@ -130,6 +143,7 @@ export function RollCard({ roll, onUpdate, onDelete }: RollCardProps) {
   const [framesShot, setFramesShot] = useState(roll.frames_shot);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
   const stops = getStops(roll.shot_iso, roll.film_stock.iso);
+  const expirationWarning = getTimeToExpire(roll.expiration_date);
 
   const handleDelete = async () => {
     await onDelete(roll.id);
@@ -146,6 +160,7 @@ export function RollCard({ roll, onUpdate, onDelete }: RollCardProps) {
           <Badge color={stops === 0 ? 'gray' : stops > 0 ? 'red' : 'blue'} variant="light">
             {formatPushPull(stops)}
           </Badge>
+          {expirationWarning && <Badge color={expirationWarning.color}>{expirationWarning.label}</Badge>}
           <Badge color={statusColors[roll.status] ?? 'gray'}>{roll.status}</Badge>
         </Group>
       </Group>
