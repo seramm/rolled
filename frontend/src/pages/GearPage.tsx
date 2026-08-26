@@ -1,5 +1,17 @@
 import { useState } from 'react';
-import { Badge, Button, Group, NumberInput, Paper, Select, Stack, Tabs, Text, TextInput } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Group,
+  NumberInput,
+  Paper,
+  Select,
+  Stack,
+  Tabs,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useCameraModels } from '../hooks/useCameraModels';
 import { useCameras } from '../hooks/useCameras';
@@ -64,7 +76,7 @@ function FilmStocksSection() {
 function CameraModelsSection() {
   const { cameraModels, createCameraModel, deleteCameraModel } = useCameraModels();
   const form = useForm({
-    initialValues: { make: '', model: '', format: '' },
+    initialValues: { make: '', model: '', format: '', has_prewind: false },
     validate: {
       make: (v) => (v ? null : 'Required'),
       model: (v) => (v ? null : 'Required'),
@@ -85,6 +97,7 @@ function CameraModelsSection() {
             <TextInput label="Make" {...form.getInputProps('make')} />
             <TextInput label="Model" {...form.getInputProps('model')} />
             <TextInput label="Format" placeholder="35mm" {...form.getInputProps('format')} />
+            <Checkbox label="Prewind" {...form.getInputProps('has_prewind', { type: 'checkbox' })} />
             <Button type="submit">Add</Button>
           </Group>
         </form>
@@ -98,6 +111,11 @@ function CameraModelsSection() {
                   {cm.make} {cm.model}
                 </Text>
                 <Badge variant="light">{cm.format}</Badge>
+                {cm.has_prewind && (
+                  <Badge variant="light" color="grape">
+                    Prewind
+                  </Badge>
+                )}
               </Group>
               <Button color="red" variant="subtle" size="xs" onClick={() => deleteCameraModel(cm.id)}>
                 Delete

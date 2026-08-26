@@ -9,13 +9,13 @@ from .models import Camera, CameraModel, FilmStock, Roll, User
 class CameraModelOut(ModelSchema):
     class Meta:
         model = CameraModel
-        fields = ["id", "make", "model", "format"]
+        fields = ["id", "make", "model", "format", "has_prewind"]
 
 
 class CameraModelIn(ModelSchema):
     class Meta:
         model = CameraModel
-        fields = ["make", "model", "format"]
+        fields = ["make", "model", "format", "has_prewind"]
 
 
 class CameraOut(ModelSchema):

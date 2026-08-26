@@ -261,6 +261,11 @@ export interface components {
             model: string;
             /** Format */
             format: string;
+            /**
+             * Has Prewind
+             * @default false
+             */
+            has_prewind: boolean;
         };
         /** CameraModelIn */
         CameraModelIn: {
@@ -270,6 +275,11 @@ export interface components {
             model: string;
             /** Format */
             format: string;
+            /**
+             * Has Prewind
+             * @default false
+             */
+            has_prewind: boolean;
         };
         /** CameraOut */
         CameraOut: {

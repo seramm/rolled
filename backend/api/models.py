@@ -16,6 +16,7 @@ class CameraModel(models.Model):
     make = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     format = models.CharField(max_length=255)
+    has_prewind = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.make} {self.model}"
