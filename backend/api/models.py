@@ -60,7 +60,6 @@ class Roll(models.Model):
         Camera, on_delete=models.SET_NULL, null=True, blank=True, related_name="rolls"
     )
     status = models.CharField(max_length=255, choices=Status.choices, default=Status.STORED)
-    frames_shot = models.PositiveSmallIntegerField(default=0)
     shot_iso = models.PositiveSmallIntegerField(null=True, blank=True)
     expiration_date = models.DateField()
     date_bought = models.DateField(null=True, blank=True)
@@ -72,8 +71,39 @@ class Roll(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.film_stock} ({self.status} - {self.frames_shot})"
+        return f"{self.film_stock} ({self.status} - {self.frames.count()})"
 
     @property
     def is_in_progress(self):
-        return 0 < self.frames_shot < self.film_stock.frames
+        return 0 < self.frames.count() < self.film_stock.frames
+
+
+class Frame(models.Model):
+    class State(models.TextChoices):
+        EXPOSED = (
+            "exposed",
+            "Exposed",
+        )
+        BLANK = (
+            "blank",
+            "Blank",
+        )
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    roll = models.ForeignKey(Roll, on_delete=models.CASCADE, related_name="frames")
+    camera = models.ForeignKey(
+        Camera, on_delete=models.SET_NULL, related_name="frames", null=True, blank=True
+    )
+    position = models.PositiveSmallIntegerField()
+    state = models.CharField(max_length=255, choices=State.choices, default="exposed")
+
+    class Meta:
+        ordering = ["position"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["roll", "position"], name="unique_frame_position_per_roll"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.roll} #{self.position} ({self.state})"

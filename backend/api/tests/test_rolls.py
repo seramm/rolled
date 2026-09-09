@@ -1,6 +1,6 @@
 import pytest
 
-from api.models import Roll
+from api.models import Frame, Roll
 
 
 @pytest.mark.django_db
@@ -23,8 +23,9 @@ def test_is_in_progress(client, user, film_stock):
         user=user,
         film_stock=film_stock,
         expiration_date="2027-01-01",
-        frames_shot=10,
     )
+    for i in range(10):
+        Frame.objects.create(roll=roll, position=i + 1, state=Frame.State.EXPOSED)
     client.force_login(user)
 
     response = client.get(f"/api/rolls/{roll.id}")
