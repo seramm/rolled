@@ -5,6 +5,7 @@ from .auth import router as auth_router
 from .camera_models import router as camera_models_router
 from .cameras import router as cameras_router
 from .film_stocks import router as film_stocks_router
+from .frames import router as frames_router
 from .rolls import router as rolls_router
 
 api = NinjaAPI(title="rolled", version="0.1.0", docs_url="/docs", auth=django_auth)
@@ -24,3 +25,4 @@ api.add_router("/camera-models", camera_models_router)
 api.add_router("/cameras", cameras_router)
 api.add_router("/film-stocks", film_stocks_router)
 api.add_router("/rolls", rolls_router)
+api.add_router("/rolls", frames_router)

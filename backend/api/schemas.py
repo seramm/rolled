@@ -3,7 +3,7 @@ from datetime import date
 
 from ninja import ModelSchema, Schema
 
-from .models import Camera, CameraModel, FilmStock, Roll, User
+from .models import Camera, CameraModel, FilmStock, Frame, Roll, User
 
 
 class CameraModelOut(ModelSchema):
@@ -42,9 +42,23 @@ class FilmStockIn(ModelSchema):
         fields = ["brand", "name", "iso", "format", "color_type", "frames"]
 
 
+class FrameOut(ModelSchema):
+    camera: CameraOut | None
+
+    class Meta:
+        model = Frame
+        fields = ["id", "position", "state"]
+
+
+class FrameIn(Schema):
+    state: Frame.State = Frame.State.EXPOSED
+    camera_id: uuid.UUID | None = None
+
+
 class RollOut(ModelSchema):
     film_stock: FilmStockOut
     camera: CameraOut | None
+    frames: list[FrameOut]
     is_in_progress: bool
     status: Roll.Status
 
@@ -53,7 +67,6 @@ class RollOut(ModelSchema):
         fields = [
             "id",
             "status",
-            "frames_shot",
             "shot_iso",
             "expiration_date",
             "date_bought",
@@ -70,7 +83,6 @@ class RollIn(Schema):
     film_stock_id: uuid.UUID
     camera_id: uuid.UUID | None = None
     status: Roll.Status = Roll.Status.STORED
-    frames_shot: int = 0
     shot_iso: int | None = None
     expiration_date: date
     date_bought: date | None = None
